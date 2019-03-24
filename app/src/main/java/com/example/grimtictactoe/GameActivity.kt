@@ -11,8 +11,8 @@ import kotlin.random.Random.Default.nextBoolean
 
 class GameActivity : AppCompatActivity() {
 
-    var points1 = 0
-    var points2 = 0
+    var pointsX = 0
+    var pointsO = 0
     var board = arrayOfNulls<Boolean>(25)
     private var playerturn = true // true = player 1 turn  false = player 2 turn
 
@@ -26,39 +26,36 @@ class GameActivity : AppCompatActivity() {
     fun onClick(view: View) {
 
         if (playerturn) {
-            findViewById<Button>(view.id).text = "X"
             val number = resources.getResourceName(view.id).takeLast(2).toInt()
-
-            setArray(number, playerturn)
+            if(board[setBoardId(number)] == null){
+                findViewById<Button>(view.id).text = "X"
+                board[setBoardId(number)] = playerturn
+            }
 
             if(checkWin()){
                 Toast.makeText(this, "Player one won!", Toast.LENGTH_LONG).show()
                 clearBoard()
-                points1++
-                textView.text = "Player1: $points1"
+                pointsX++
+                textView.text = "Player1: $pointsX"
             }
 
-            if(checkDraw()) {
-                Toast.makeText(this, "Draw!", Toast.LENGTH_LONG).show()
-                clearBoard()
-            }
+            checkDraw()
             playerturn = false
 
 
         } else {
-            findViewById<Button>(view.id).text = "O"
             val number = resources.getResourceName(view.id).takeLast(2).toInt()
-            setArray(number, playerturn)
+            if(board[setBoardId(number)] == null){
+                findViewById<Button>(view.id).text = "O"
+                board[setBoardId(number)] = playerturn
+            }
             if(checkWin().not()){
                 Toast.makeText(this, "Player two won!", Toast.LENGTH_LONG).show()
                 clearBoard()
-                points2++
-                textView2.text = "Player2: $points2"
+                pointsO++
+                textView2.text = "Player2: $pointsO"
             }
-            if(checkDraw()) {
-                Toast.makeText(this, "Draw!", Toast.LENGTH_LONG).show()
-                clearBoard()
-            }
+            checkDraw()
 
             playerturn = true
 
@@ -67,6 +64,18 @@ class GameActivity : AppCompatActivity() {
 
 
     }
+
+    private fun setBoardId(id: Int) : Int {
+        when (id) {
+            in 0..4 -> return id
+            in 10..14 -> return (id-5)
+            in 20..24 -> return (id-10)
+            in 30..34 -> return (id-15)
+            in 40..44 -> return (id-20)
+        }
+        return -1
+    }
+
 
     private fun setArray(id: Int, value: Boolean) {
         when (id) {
@@ -128,6 +137,8 @@ class GameActivity : AppCompatActivity() {
         for(i in 0..24){
             if(board[i] == null) {return false}
         }
+        Toast.makeText(this, "Draw!", Toast.LENGTH_LONG).show()
+        clearBoard()
         return true
     }
 
@@ -151,10 +162,10 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun reset(){
-        points1 = 0
-        points2 = 0
-        textView.text = "Player1: $points1"
-        textView2.text = "Player2: $points2"
+        pointsX = 0
+        pointsO = 0
+        textView.text = "Player1: $pointsX"
+        textView2.text = "Player2: $pointsO"
         clearBoard()
     }
 
