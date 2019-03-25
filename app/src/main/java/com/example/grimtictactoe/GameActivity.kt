@@ -23,7 +23,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    fun onClick(view: View) {
+    fun onClick(view: View) { // main fun
 
         if (playerturn) {
             val number = resources.getResourceName(view.id).takeLast(2).toInt()
@@ -36,11 +36,8 @@ class GameActivity : AppCompatActivity() {
                 Toast.makeText(this, "Player one won!", Toast.LENGTH_LONG).show()
                 clearBoard()
                 pointsX++
-                textView.text = "Player1: $pointsX"
+                textView.text = "Player 1: $pointsX"
             }
-
-            checkDraw()
-            playerturn = false
 
 
         } else {
@@ -53,19 +50,15 @@ class GameActivity : AppCompatActivity() {
                 Toast.makeText(this, "Player two won!", Toast.LENGTH_LONG).show()
                 clearBoard()
                 pointsO++
-                textView2.text = "Player2: $pointsO"
+                textView2.text = "Player 2: $pointsO"
             }
-            checkDraw()
-
-            playerturn = true
-
-
         }
-
+        checkDraw()
+        playerturn = playerturn.not()
 
     }
 
-    private fun setBoardId(id: Int) : Int {
+    private fun setBoardId(id: Int) : Int { // changing button tag to corresponding place in board array
         when (id) {
             in 0..4 -> return id
             in 10..14 -> return (id-5)
@@ -77,7 +70,7 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-    private fun setArray(id: Int, value: Boolean) {
+    private fun setArray(id: Int, value: Boolean) { // setting board array values (replaced with setBoardId)
         when (id) {
             in 0..4 -> board[id] = value
             in 10..14 -> board[id - 5] = value
@@ -88,8 +81,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun checkWin(): Boolean {
-        // Ugly mess. Need to change it.
-        val leftDiag = arrayOf(0, 6, 12, 18, 24)
+        // Ugly mess. Need to change it. Returns playerturn, if curretn player won the game.
 
         if (board[0] == playerturn && board[6] == playerturn && board[12] == playerturn && board[18] == playerturn && board[24] == playerturn) {
                 return playerturn
@@ -133,7 +125,7 @@ class GameActivity : AppCompatActivity() {
         return playerturn.not()
     }
 
-    fun checkDraw(): Boolean{
+    private fun checkDraw(): Boolean{ // If board is full, clears board and starts new turn
         for(i in 0..24){
             if(board[i] == null) {return false}
         }
@@ -142,11 +134,11 @@ class GameActivity : AppCompatActivity() {
         return true
     }
 
-    private fun whoGoesFirst() {
+    private fun whoGoesFirst() { // Just random boolean
         playerturn = nextBoolean()
     }
 
-    private fun clearBoard(){
+    private fun clearBoard(){ //Clears the buttons text and board values
         val idList = arrayOf(
             button00.id, button01.id, button02.id, button03.id, button04.id,
             button10.id, button11.id, button12.id, button13.id, button14.id,
@@ -161,7 +153,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun reset(){
+    fun reset(){ // Resets points. Not implemented yet.
         pointsX = 0
         pointsO = 0
         textView.text = "Player1: $pointsX"
